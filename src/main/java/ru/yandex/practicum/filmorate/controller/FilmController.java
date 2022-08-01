@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class FilmController {
-    Map<Integer, Film> films = new HashMap<>();
+    private final Map<Long, Film> films = new HashMap<>();
     private int id = 0;
 
     @PostMapping("/films")
@@ -27,7 +27,7 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping(value = "/films")
+    @PutMapping("/films")
     public Film update(@RequestBody Film film) {
         if (!films.containsKey(film.getId())) {
             throw new ValidationException("Фильма с id: '" + film.getId() + "' не существует!");
@@ -60,5 +60,9 @@ public class FilmController {
         if (film.getDuration() <= 0) {
             throw new ValidationException("продолжительность фильма должна быть положительной");
         }
+    }
+
+    public Map<Long, Film> getFilms() {
+        return films;
     }
 }

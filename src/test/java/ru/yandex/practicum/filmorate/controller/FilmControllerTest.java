@@ -25,8 +25,8 @@ class FilmControllerTest {
 
         controller.create(film);
 
-        assertFalse(controller.films.isEmpty());
-        assertEquals("Марсианин",controller.films.get(1).getName());
+        assertFalse(controller.getFilms().isEmpty());
+        assertEquals("Марсианин",controller.getFilms().get(1L).getName());
     }
 
     @Test
@@ -121,9 +121,9 @@ class FilmControllerTest {
 
         controller.update(filmNew);
 
-        assertNotEquals(film, controller.films.get(1));
-        assertEquals("Марсианин 2", controller.films.get(1).getName());
-        assertEquals(14, controller.films.get(1).getDuration());
+        assertNotEquals(film, controller.getFilms().get(1));
+        assertEquals("Марсианин 2", controller.getFilms().get(1L).getName());
+        assertEquals(14, controller.getFilms().get(1L).getDuration());
     }
 
     @Test

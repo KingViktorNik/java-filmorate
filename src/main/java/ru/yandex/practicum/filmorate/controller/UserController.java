@@ -15,8 +15,8 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class UserController {
-    Map<Integer, User> users = new HashMap<>();
-    private int id = 0;
+    private Map<Long, User> users = new HashMap<>();
+    private long id = 0;
 
     @PostMapping("/users")
     public User create(@Valid @RequestBody User user) {
@@ -69,5 +69,9 @@ public class UserController {
         if (user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Дата не может быть в будущем.");
         }
+    }
+
+    public Map<Long, User> getUsers() {
+        return users;
     }
 }

@@ -23,8 +23,8 @@ class UserControllerTest {
 
         controller.create(user);
 
-        assertFalse(controller.users.isEmpty());
-        assertEquals("Jimi",controller.users.get(1).getName());
+        assertFalse(controller.getUsers().isEmpty());
+        assertEquals("Jimi",controller.getUsers().get(1L).getName());
     }
 
     @Test
@@ -37,8 +37,8 @@ class UserControllerTest {
 
         controller.create(user);
 
-        assertFalse(controller.users.isEmpty());
-        assertEquals("Jim878",controller.users.get(1).getName());
+        assertFalse(controller.getUsers().isEmpty());
+        assertEquals("Jim878",controller.getUsers().get(1L).getName());
     }
 
     @Test
@@ -51,8 +51,8 @@ class UserControllerTest {
 
         controller.create(user);
 
-        assertFalse(controller.users.isEmpty());
-        assertEquals("Jim878",controller.users.get(1).getName());
+        assertFalse(controller.getUsers().isEmpty());
+        assertEquals("Jim878",controller.getUsers().get(1L).getName());
     }
 
     @Test
@@ -158,8 +158,8 @@ class UserControllerTest {
 
         controller.update(userNew);
 
-        assertNotEquals(user, controller.users.get(1));
-        assertEquals("JimTheWorm", controller.users.get(1).getName());
+        assertNotEquals(user, controller.getUsers().get(1));
+        assertEquals("JimTheWorm", controller.getUsers().get(1L).getName());
     }
 
     @Test

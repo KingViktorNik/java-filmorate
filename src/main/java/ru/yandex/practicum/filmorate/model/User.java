@@ -5,9 +5,9 @@ import java.time.LocalDate;
 
 @Data
 public class User {
-    int id; //идентификатор
-    String email; // электронная почта
-    String login; // логин пользователя
-    String name; // имя для отображения
-    LocalDate birthday; // дата рождения
+    private long id; //идентификатор
+    private String email; // электронная почта
+    private String login; // логин пользователя
+    private String name; // имя для отображения
+    private LocalDate birthday; // дата рождения
 }
