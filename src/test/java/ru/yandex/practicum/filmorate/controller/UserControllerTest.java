@@ -2,16 +2,22 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+
 import java.time.LocalDate;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 class UserControllerTest {
-    private final UserController controller = new UserController();
+
+
+    private final InMemoryUserStorage controller  = new InMemoryUserStorage();
+
 
     @Test
     void create() {
