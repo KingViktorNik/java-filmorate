@@ -16,5 +16,5 @@ public interface UserStorage {
     //список всех ползователей
     List<User> userAll();
 
-    public Map<Long, User> getUsers();
+    Map<Long, User> getUsers();
 }
