@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NullObjectException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -22,7 +24,10 @@ public class FilmService {
 
     // Добовление лайка
     public Film addLike(long id, long userId) {
-        nullFilm(id);
+        if (!filmStorage.getFilms().containsKey(id)) {
+            throw new NullObjectException(String.format("Фильмь с id: '%d' несуществует.", id));
+        }
+
         Film film = filmStorage.getFilms().get(id);
         film.getLikes().add(userId);
         log.info(String.format("Добавлен userId в список likes фильма: id:%d, name:%s, likes: ++userId:%d",
@@ -36,7 +41,10 @@ public class FilmService {
 
     // Удаление лайка
     public Film deleteLike(long id, long userId) {
-        nullFilm(id);
+        if (!filmStorage.getFilms().containsKey(id)) {
+            throw new NullObjectException(String.format("Фильмь с id: '%d' несуществует.", id));
+        }
+
         Film film = filmStorage.getFilms().get(id);
 
         if (!film.getLikes().contains(userId)) {
@@ -60,12 +68,6 @@ public class FilmService {
                    .limit(count)
                    .collect(Collectors.toList()
                );
-    }
-
-    private void nullFilm(long id) {
-        if (!filmStorage.getFilms().containsKey(id)) {
-            throw new NullObjectException(String.format("Фильмь с id: '%d' несуществует.", id));
-        }
     }
 
     public FilmStorage getFilmStorage() {

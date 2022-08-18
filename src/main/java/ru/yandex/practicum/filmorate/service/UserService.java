@@ -22,8 +22,14 @@ public class UserService {
 
     // Добовления в друзья
     public User addFriend(long id, long idFriend) {
-        nullUser(id);
-        nullUser(idFriend);
+        if (!userStorage.getUsers().containsKey(id)) {
+            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", id));
+        }
+
+        if (!userStorage.getUsers().containsKey(idFriend)) {
+            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", idFriend));
+        }
+
         User user = userStorage.getUsers().get(id);
         User friend = userStorage.getUsers().get(idFriend);
 
@@ -46,8 +52,14 @@ public class UserService {
 
     // Удаление из друзей
     public User deleteFriend(long id, long idFriend) {
-        nullUser(id);
-        nullUser(idFriend);
+        if (!userStorage.getUsers().containsKey(id)) {
+            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", id));
+        }
+
+        if (!userStorage.getUsers().containsKey(idFriend)) {
+            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", idFriend));
+        }
+
         User user = userStorage.getUsers().get(id);
         User friend = userStorage.getUsers().get(idFriend);
 
@@ -87,12 +99,6 @@ public class UserService {
         }
 
         return users;
-    }
-
-    private void nullUser(long id) {
-        if (!userStorage.getUsers().containsKey(id)) {
-            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", id));
-        }
     }
 
     public UserStorage getUserStorage() {

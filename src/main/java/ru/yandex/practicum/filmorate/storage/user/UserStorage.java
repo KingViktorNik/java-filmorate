@@ -5,15 +5,24 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserStorage {
-    // добовление пользлвателя
+    /**
+     * добовление пользлвателя
+     */
     User create(User user);
 
-    // обновление информации о пользователе
+    /**
+     * обновление информации о пользователе
+     */
     User update(User user);
 
-    // пользователь по id
+    /**
+     * пользователь по id
+     */
     User user(long id);
-    //список всех ползователей
+
+    /**
+     * список всех ползователей
+     */
     List<User> userAll();
 
     Map<Long, User> getUsers();

@@ -3,21 +3,17 @@ package ru.yandex.practicum.filmorate.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import ru.yandex.practicum.filmorate.exception.NullObjectException;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmServiceTest {
     private final FilmService filmService = new FilmService( new InMemoryFilmStorage());
     private Film film1;
-
     @BeforeEach
     void addFilm() {
         film1 = new Film();

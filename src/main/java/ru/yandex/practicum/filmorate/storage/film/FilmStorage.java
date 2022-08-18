@@ -6,16 +6,24 @@ import java.util.List;
 import java.util.Map;
 
 public interface FilmStorage {
-    // добовление фильма
+    /**
+     * добовление фильма
+     */
     Film create(Film film);
 
-    // обновление информации о фильме
+    /**
+     * обновление информации о фильме
+     */
     Film update(Film film);
 
-    // фильм по id
+    /**
+     * фильм по id
+     */
     Film film(long id);
 
-    // список всех фильмов
+    /**
+     * список всех фильмов
+     */
     List<Film> filmAll();
 
     Map<Long, Film> getFilms();
