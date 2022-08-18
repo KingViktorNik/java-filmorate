@@ -1,7 +1,8 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NullObjectException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Component
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage{
     private final Map<Long, Film> films = new HashMap<>();
@@ -29,7 +30,7 @@ public class InMemoryFilmStorage implements FilmStorage{
     @Override
     public Film update(Film film) {
         if (!films.containsKey(film.getId())) {
-            throw new ValidationException("Фильма с id: '" + film.getId() + "' не существует!");
+            throw new NullObjectException(String.format("Фильм с id: '%d' не существует!", film.getId()));
         }
         dataVerification(film);
         films.put(film.getId(), film);
@@ -41,6 +42,14 @@ public class InMemoryFilmStorage implements FilmStorage{
     public List<Film> filmAll() {
         return new ArrayList<>(films.values());
     }
+
+    @Override
+    public Film film(long id) {
+        if (!films.containsKey(id))
+            throw new NullObjectException(String.format("Фильм с id: '%d' не существует!", id));
+        return films.get(id);
+    }
+
 
     private void dataVerification(Film film) {
         //название не может быть пустым
