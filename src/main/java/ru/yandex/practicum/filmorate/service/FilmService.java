@@ -40,7 +40,7 @@ public class FilmService {
         Film film = filmStorage.getFilms().get(id);
 
         if (!film.getLikes().contains(userId)) {
-            throw new NullObjectException(String.format("Пользователя с id:%d нет в списке likes.", userId));
+            throw new NullObjectException(String.format("Пользователя с id: '%d' нет в списке likes.", userId));
         }
 
         film.getLikes().remove(userId);
@@ -56,19 +56,16 @@ public class FilmService {
     // Вывод 10(count) полулярных фильмов по количеству лайков
     public List<Film> topFilms(long count) {
         return filmStorage.getFilms().values().stream()
-                .sorted(this::compare)
-                .limit(count)
-                .collect(Collectors.toList());
+                   .sorted((f0, f1) -> f1.getLikes().size() - f0.getLikes().size())
+                   .limit(count)
+                   .collect(Collectors.toList()
+               );
     }
 
     private void nullFilm(long id) {
         if (!filmStorage.getFilms().containsKey(id)) {
-            throw new NullObjectException(String.format("Фильмь с id:%d несуществует.", id));
+            throw new NullObjectException(String.format("Фильмь с id: '%d' несуществует.", id));
         }
-    }
-
-    private int compare (Film f0, Film f1) {
-        return f1.getLikes().size() - f0.getLikes().size();
     }
 
     public FilmStorage getFilmStorage() {

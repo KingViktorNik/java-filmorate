@@ -13,10 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 class UserStorageTest {
-
-
     private final UserStorage controller  = new InMemoryUserStorage();
-
 
     @Test
     void create() {

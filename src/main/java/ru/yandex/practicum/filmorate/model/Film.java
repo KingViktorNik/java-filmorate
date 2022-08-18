@@ -12,5 +12,5 @@ public class Film {
     private String description; // описание
     private LocalDate releaseDate; // дата релиза
     private int duration; // продолжительность фильма
-    private Set<Long> likes = new HashSet<>(); // кол-во лайков
+    private Set<Long> likes = new HashSet<>(); // список userId лайков
 }
