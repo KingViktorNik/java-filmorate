@@ -1,11 +1,11 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.yandex.practicum.filmorate.exception.NullObjectException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-class FilmControllerTest {
-    private final InMemoryFilmStorage controller = new InMemoryFilmStorage();
+class FilmStorageTest {
+    private final FilmStorage controller = new InMemoryFilmStorage();
 
     @Test
     void create() {
@@ -122,7 +122,7 @@ class FilmControllerTest {
 
         controller.update(filmNew);
 
-        assertNotEquals(film, controller.getFilms().get(1));
+        assertNotEquals(film, controller.getFilms().get(1L));
         assertEquals("Марсианин 2", controller.getFilms().get(1L).getName());
         assertEquals(14, controller.getFilms().get(1L).getDuration());
     }
@@ -138,10 +138,39 @@ class FilmControllerTest {
         controller.create(film);
         film.setId(555);
 
-        final ValidationException exception = assertThrows(
-                ValidationException.class, ()-> controller.update(film)
+        final NullObjectException exception = assertThrows(
+                NullObjectException.class, ()-> controller.update(film)
         );
-        assertEquals("Фильма с id: '555' не существует!",exception.getMessage());
+        assertEquals("Фильм с id: '555' не существует!",exception.getMessage());
+    }
+
+    @Test
+    void userIncorrectId() {
+        Film film = new Film();
+        film.setName("Марсианин");
+        film.setDescription("Красивый, хорошее оформление съёмочных площадок, добрый, незатянутый сюжет.");
+        film.setDuration(144);
+        film.setReleaseDate(LocalDate.of(2015,9,11));
+
+        controller.create(film);
+
+        final NullObjectException exception = assertThrows(
+                NullObjectException.class, ()-> controller.film(555)
+        );
+        assertEquals("Фильм с id: '555' не существует!",exception.getMessage());
+    }
+
+    @Test
+    void userId() {
+        Film film = new Film();
+        film.setName("Марсианин");
+        film.setDescription("Красивый, хорошее оформление съёмочных площадок, добрый, незатянутый сюжет.");
+        film.setDuration(144);
+        film.setReleaseDate(LocalDate.of(2015,9,11));
+
+        controller.create(film);
+        Film film2 = controller.film(1);
+        assertEquals(film, film2);
     }
 
     @Test
