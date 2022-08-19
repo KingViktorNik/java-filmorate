@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class User {
@@ -10,4 +12,6 @@ public class User {
     private String login; // логин пользователя
     private String name; // имя для отображения
     private LocalDate birthday; // дата рождения
+    private Set<Long> friends = new HashSet<>(); // список друзей
+    private Set<Long> likeFilms = new HashSet<>(); // список фильмоф отмеченные лайком
 }
