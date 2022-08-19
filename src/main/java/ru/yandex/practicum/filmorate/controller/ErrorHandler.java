@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,7 +9,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 @RestControllerAdvice
 public class ErrorHandler {
-
     @ExceptionHandler
     public ResponseEntity<?> handlerNullObjectException(final NullObjectException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

@@ -98,10 +98,6 @@ public class UserController {
         if (user.getLogin() == null || user.getLogin().isBlank()) {
             throw new ValidationException("login не коректный.");
         }
-        // имя для отображения может быть пустым — в таком случае будет использован логин;
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
         // дата рождения не может быть в будущем.
         if (user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Дата не может быть в будущем.");

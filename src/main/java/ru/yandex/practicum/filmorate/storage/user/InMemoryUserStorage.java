@@ -12,12 +12,22 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User create(User user) {
         user.setId(++id);
+        // имя для отображения может быть пустым — в таком случае будет использован логин;
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+
         users.put(user.getId(), user);
         return user;
     }
 
     @Override
     public User update(User user) {
+        // имя для отображения может быть пустым — в таком случае будет использован логин;
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+
         users.put(user.getId(), user);
         return user;
     }
