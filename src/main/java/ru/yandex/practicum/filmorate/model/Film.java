@@ -1,16 +1,23 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
+
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
+@Builder
 public class Film {
     private long id; // идентификатор
+    @NotNull
     private String name; // название
-    private String description; // описание
     private LocalDate releaseDate; // дата релиза
+    private String description; // описание
     private int duration; // продолжительность фильма
-    private Set<Long> likes = new HashSet<>(); // список userId лайков
+    private int rate; // оценка фильма
+    private Mpa mpa; // рейтинг фильма
+    private List<Genre> genres; //жанр фильмов
+    private Set<Long> likes; // список userId лайков
 }
