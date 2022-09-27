@@ -2,106 +2,86 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NullObjectException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.time.LocalDate;
 import java.util.*;
 
-@Service
 @Slf4j
+@Service
 public class UserService {
     private final UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
-    // Добовления в друзья
-    public User addFriend(long id, long idFriend) {
-        if (!userStorage.getUsers().containsKey(id)) {
-            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", id));
+    public Optional<User> create(User user) {
+        dataVerification(user);
+
+        // имя для отображения может быть пустым — в таком случае будет использован логин;
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
         }
 
-        if (!userStorage.getUsers().containsKey(idFriend)) {
-            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", idFriend));
-        }
+        User addUser = userStorage.create(user)
+                .orElseThrow(() -> new NullObjectException("Пользователь не добавлен: id: %d, login:%s"));
 
-        User user = userStorage.getUsers().get(id);
-        User friend = userStorage.getUsers().get(idFriend);
+        log.info(String.format("Добавлен пользователь: id: %d, login:%s", addUser.getId(), addUser.getLogin()));
 
-        if (id != idFriend) {
-            user.getFriends().add(idFriend);
-            friend.getFriends().add(id);
-        } else {
-            throw new ValidationException("Пользователь не может добвасить сам себя в друзья!");
-        }
-
-        log.info(String.format("Пользловаетль id:%d, name:%s, добавил в друзья id:%d, name:%s",
-                user.getId(),
-                user.getName(),
-                friend.getId(),
-                friend.getName()
-        ));
-
-        return user;
+        return Optional.of(addUser);
     }
 
-    // Удаление из друзей
-    public User deleteFriend(long id, long idFriend) {
-        if (!userStorage.getUsers().containsKey(id)) {
-            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", id));
+    public Optional<User> update(User user) {
+        userStorage.getUserById(user.getId())
+                .orElseThrow(()-> new NullObjectException(
+                        String.format("Пользователя с id: '%d' не существует!", user.getId()))
+                );
+    // имя для отображения может быть пустым — в таком случае будет использован логин;
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
         }
-
-        if (!userStorage.getUsers().containsKey(idFriend)) {
-            throw new NullObjectException(String.format("Пользователь с id:%d несуществует.", idFriend));
-        }
-
-        User user = userStorage.getUsers().get(id);
-        User friend = userStorage.getUsers().get(idFriend);
-
-        user.getFriends().remove(idFriend);
-        friend.getFriends().remove(id);
-
-        log.info(String.format("Пользловаетль id:%d, name:%s, удалил из друзей id:%d, name:%s",
-                user.getId(),
-                user.getName(),
-                friend.getId(),
-                friend.getName()
-        ));
-
-        return user;
+        User userUp = userStorage.update(user)
+                .orElseThrow(()-> new NullObjectException(String.format("Данные пользователя id:%d name:%s не изменены!",user.getId(),user.getName())));
+        return Optional.of(userUp);
     }
 
-    // Список общих друзей
-    public List<User> listFriends(long id) {
-        List<User> friends = new ArrayList<>();
-
-        for (Long idFriend : userStorage.getUsers().get(id).getFriends()) {
-            friends.add(userStorage.getUsers().get(idFriend));
-        }
-
-        return friends;
+    public List<User> userAll() {
+        return userStorage.userAll();
     }
 
-    // список друзей, общих с другим пользователем
-    public List<User> commonFriends(long id, long otherId) {
-        Set<Long> commonList = new HashSet<>(userStorage.getUsers().get(id).getFriends());
-        commonList.retainAll(userStorage.getUsers().get(otherId).getFriends());
-
-        List<User> users = new ArrayList<>();
-
-        for (Long commonFriend : commonList) {
-            users.add(this.userStorage.getUsers().get(commonFriend));
-        }
-
-        return users;
+    public Optional<User> getUserById(long id) {
+        return Optional.ofNullable(userStorage.getUserById(id)
+                .orElseThrow(() -> new NullObjectException(String.format("Пользователя с id: '%d' не существует!", id))));
     }
 
-    public UserStorage getUserStorage() {
-        return userStorage;
+    // Проверка email на корректность
+    private static boolean email(String email) {
+        int at = email.indexOf("@");
+        int dot = email.lastIndexOf(".");
+        return !(at > -1 && dot > at);
+    }
+
+    private void dataVerification(User user) {
+        // электронная почта не может быть пустой и должна содержать символ @
+        if (user.getEmail() == null ||
+                user.getEmail().isBlank() ||
+                email(user.getEmail())) {
+            throw new ValidationException("email не корректный.");
+        }
+        // логин не может быть пустым и содержать пробелы;
+        if (user.getLogin() == null || user.getLogin().isBlank()) {
+            throw new ValidationException("login не корректный.");
+        }
+        // дата рождения не может быть в будущем.
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            throw new ValidationException("Дата не может быть в будущем.");
+        }
     }
 }
