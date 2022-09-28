@@ -22,7 +22,7 @@ public class MpaController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Mpa> getGenreById(@PathVariable long id) {
+    public Optional<Mpa> getMpaById(@PathVariable long id) {
         return mpaService.getMpaById(id);
     }
 

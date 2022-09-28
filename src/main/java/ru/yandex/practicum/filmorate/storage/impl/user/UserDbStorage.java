@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.storage.impl.user.mapper.UserMapper;
 import java.sql.PreparedStatement;
 import java.util.*;
 
-//@Component
 @Repository
 @Qualifier(("userDbStorage"))
 public class UserDbStorage implements UserStorage {
